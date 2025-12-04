@@ -1,0 +1,30 @@
+
+services:
+  context-agent:
+    build: .
+    container_name: context-agent
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+      - 9001:9001
+      - 8000:8000
+    volumes:
+      - ollama:/root/.ollama
+      - ./app:/app
+    networks:
+      - internal
+    env_file: .env
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+
+volumes:
+  ollama:
+
+networks:
+  internal:
